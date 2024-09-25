@@ -13,14 +13,15 @@ import InsuranceDetails from "./contractFormComponents/InsuranceDetails";
 import TenantInformation from "./contractFormComponents/TenantInformation";
 import TermsAndConditions from "./contractFormComponents/TermsAndConditions";
 import ContractReviewSummary from "./contractFormComponents/ContractReviewSummary";
+import RentAndPaymentTerms from "./contractFormComponents/RentAndPaymentTerms";
 
 // Define the steps
 const steps = [
   "Contract Details",
-  "Owner Information",
+  "Tenant Information",
+  "Rent And Payment Terms",
   "Contract Duration",
   "Insurance Details",
-  "Tenant Information",
   "Terms And Conditions",
   "Review & Submit",
 ];
@@ -38,10 +39,16 @@ const StepContent = ({
     case 0:
       return <ContractDetails formData={formData} setFormData={setFormData} />;
     case 1:
-      return <OwnerInformation formData={formData} setFormData={setFormData} />;
+      return (
+        <TenantInformation formData={formData} setFormData={setFormData} />
+      );
     case 2:
-      return <ContractDuration formData={formData} setFormData={setFormData} />;
+      return (
+        <RentAndPaymentTerms formData={formData} setFormData={setFormData} />
+      );
     case 3:
+      return <ContractDuration formData={formData} setFormData={setFormData} />;
+    case 4:
       return (
         <InsuranceDetails
           formData={formData}
@@ -50,10 +57,7 @@ const StepContent = ({
           setAgreedToTerms={setAgreedToTerms}
         />
       );
-    case 4:
-      return (
-        <TenantInformation formData={formData} setFormData={setFormData} />
-      );
+
     case 5:
       return (
         <TermsAndConditions
@@ -76,7 +80,7 @@ export default function ContractForm() {
     name: "",
     propertyId: "",
     address: "",
-    tenants: [{ id: 1, email: "" }],
+    tenants: [],
     totalRent: 0,
     duration: {
       startDate: "",
@@ -84,7 +88,13 @@ export default function ContractForm() {
     },
     rentDate: "",
     insuranceAmount: 0,
+    rentDueDate: "",
+    paymentMethod: "",
+    latePaymentPolicy: "",
+    securityDeposit: 0,
+    securityDepositTerms: "",
   });
+
   const [agreedToTerms, setAgreedToTerms] = useState(false); // State for checkbox
   const [agreedToTerms2, setAgreedToTerms2] = useState(false);
 
@@ -95,13 +105,14 @@ export default function ContractForm() {
     try {
       const user = JSON.parse(localStorage.getItem("user"));
       const token = user ? user.token : null;
-  
+
       if (!token) {
         alert("Please login first.");
         return;
       }
-  
-      const response = await fetch("/api/createcontract", { // Change endpoint to your contract API
+
+      const response = await fetch("/api/createcontract", {
+        // Change endpoint to your contract API
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -112,26 +123,27 @@ export default function ContractForm() {
           tenants: formData.tenants, // This should contain tenant emails
           totalRent: formData.totalRent,
           rentDate: formData.rentDate,
-          paymentMethod: formData.paymentMethod, // If applicable
+          // paymentMethod: formData.paymentMethod, // If applicable
           securityDeposit: formData.securityDeposit,
           duration: formData.duration,
           insuranceAmount: formData.insuranceAmount,
         }),
       });
-  
+
       const result = await response.json();
       if (response.ok) {
         alert("Contract created successfully!");
         // You can reset formData or redirect here if needed
       } else {
-        alert(`Failed to create contract: ${result.message || "Unknown error"}`);
+        alert(
+          `Failed to create contract: ${result.message || "Unknown error"}`
+        );
       }
     } catch (error) {
       console.error("Error creating contract:", error);
       alert("An error occurred while creating the contract.");
     }
   };
-  
 
   return (
     <Box sx={{ width: "100%" }}>
@@ -176,7 +188,7 @@ export default function ContractForm() {
                 activeStep === steps.length - 1 ? handleSubmit : handleNext
               }
               disabled={
-                (activeStep === 3 && !agreedToTerms) || // For step 3
+                (activeStep === 4 && !agreedToTerms) || // For step 3
                 (activeStep === 5 && !agreedToTerms2) // For step 5
               }
             >

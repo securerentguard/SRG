@@ -1,72 +1,65 @@
-// import { TextField, Box, Button } from "@mui/material";
-
-// export default function TenantInformation({ formData, setFormData }) {
-//   const handleAddTenant = () => {
-//     setFormData({
-//       ...formData,
-//       tenants: [...formData.tenants, { id: formData.tenants.length + 1, name: "" }],
-//     });
-//   };
-
-//   const handleTenantChange = (index, value) => {
-//     const updatedTenants = formData.tenants.map((tenant, i) =>
-//       i === index ? { ...tenant, name: value } : tenant
-//     );
-//     setFormData({ ...formData, tenants: updatedTenants });
-//   };
-
-//   return (
-//     <Box sx={{ marginTop: "50px" }}>
-//       {formData.tenants.map((tenant, index) => (
-//         <TextField
-//           key={tenant.id}
-//           label={`Invite Tenant ${tenant.id}`}
-//           variant="outlined"
-//           fullWidth
-//           value={tenant.name}
-//           onChange={(e) => handleTenantChange(index, e.target.value)}
-//           sx={{ mb: 2 }}
-//         />
-//       ))}
-//       <Button variant="contained" onClick={handleAddTenant}>
-//         Add Another Tenant
-//       </Button>
-//     </Box>
-//   );
-// }
-
-import { TextField, Box, Button } from "@mui/material";
+import { TextField, Box, Button, IconButton, Typography } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 export default function TenantInformation({ formData, setFormData }) {
   const handleAddTenant = () => {
-    setFormData({
-      ...formData,
-      tenants: [...formData.tenants, { id: formData.tenants.length + 1, email: "" }],
-    });
+    if (formData.newTenantEmail) {
+      const newTenant = { id: formData.tenants.length + 1, email: formData.newTenantEmail };
+      setFormData({
+        ...formData,
+        tenants: [...formData.tenants, newTenant],
+        newTenantEmail: "",
+      });
+    }
   };
 
-  const handleTenantChange = (index, value) => {
-    const updatedTenants = formData.tenants.map((tenant, i) =>
-      i === index ? { ...tenant, email: value } : tenant
-    );
+  const handleTenantChange = (value) => {
+    setFormData({ ...formData, newTenantEmail: value });
+  };
+
+  const handleRemoveTenant = (id) => {
+    const updatedTenants = formData.tenants.filter((tenant) => tenant.id !== id);
     setFormData({ ...formData, tenants: updatedTenants });
   };
 
   return (
     <Box sx={{ marginTop: "50px" }}>
-      {formData.tenants.map((tenant, index) => (
-        <TextField
-          key={tenant.id}
-          label={`Invite Tenant ${tenant.id}`}
-          variant="outlined"
-          fullWidth
-          value={tenant.email}
-          onChange={(e) => handleTenantChange(index, e.target.value)}
-          sx={{ mb: 2 }}
-        />
-      ))}
+      {formData.tenants.length === 0 ? (
+        <Typography variant="h4" gutterBottom>
+          No tenants added
+        </Typography>
+      ) : (
+        <Box>
+          {formData.tenants.map((tenant) => (
+            <Box
+              key={tenant.id}
+              sx={{ display: "flex", alignItems: "center", mb: 2 }}
+            >
+              <Typography variant="body1" sx={{ flexGrow: 1 }}>
+                {tenant.email}
+              </Typography>
+              <IconButton
+                edge="end"
+                aria-label="delete"
+                onClick={() => handleRemoveTenant(tenant.id)}
+              >
+                <DeleteIcon />
+              </IconButton>
+            </Box>
+          ))}
+        </Box>
+      )}
+
+      <TextField
+        label="Invite Tenant"
+        variant="outlined"
+        fullWidth
+        value={formData.newTenantEmail || ""}
+        onChange={(e) => handleTenantChange(e.target.value)}
+        sx={{ mb: 2 }}
+      />
       <Button variant="contained" onClick={handleAddTenant}>
-        Add Another Tenant
+        Add Tenant
       </Button>
     </Box>
   );

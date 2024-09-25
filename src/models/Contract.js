@@ -16,6 +16,12 @@ const ContractSchema = new mongoose.Schema(
       ref: "Owner", // Foreign key referencing Owner schema
       required: false,
     },
+    tempTenants: [
+      {
+        type: String,
+        required: false,
+      },
+    ],
     tenants: [
       {
         tenantId: {

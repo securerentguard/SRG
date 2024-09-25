@@ -10,9 +10,37 @@ export default function Tenantregister() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = async (e) => {};
+  const handleSignup = async (e) => {
+    e.preventDefault(); // Prevent form reload
 
-  const handleSignup = async (e) => {};
+    try {
+      const response = await fetch("/api/tenant/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: fname,
+          email: email,
+          password: password,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        alert(result.message); // Show success message in alert box
+        setFname("");
+        setEmail("");
+        setPassword("");
+      } else {
+        alert(result.message); // Show error message in alert box
+      }
+    } catch (error) {
+      alert("An unexpected error occurred. Please try again.");
+      console.error(error);
+    }
+  };
 
   return (
     <>
@@ -60,7 +88,7 @@ export default function Tenantregister() {
                       <input
                         type="submit"
                         defaultValue="Submit"
-                        onClick={handleLogin}
+                        onClick={(e) => handleLogin(e)}
                       />
                     </div>
                     <div className="text sign-up-text">
