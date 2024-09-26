@@ -119,6 +119,7 @@ export default function ContractForm() {
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
+          name: formData.name,
           propertyId: formData.propertyId, // Assuming you have propertyId in formData
           tenants: formData.tenants, // This should contain tenant emails
           totalRent: formData.totalRent,
