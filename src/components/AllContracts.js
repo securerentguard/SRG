@@ -75,7 +75,6 @@ export default function AllContracts() {
     <Grid container direction="column" spacing={3}>
       {/* Contracts Table */}
       <Grid item>
-        <h2>All Contracts</h2>
         {loading ? (
           <CircularProgress />
         ) : contracts.length === 0 ? (
