@@ -5,29 +5,31 @@ const TenantSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: false,
     },
     address: {
       type: String,
-      required: false,
     },
     password: {
       type: String,
-      required: false,
     },
     email: {
       type: String,
-      required: false,
-      unique: true,
+      unique: true, // Email must be unique, but not required
     },
     phone: {
       type: String,
-      required: false,
     },
     contracts: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Contract", // Foreign key from Contract schema
+        ref: "Contract", // Reference to Contract schema
+      },
+    ],
+    notifications: [
+      {
+        message: { type: String },   // Notification message
+        date: { type: Date, default: Date.now }, // Notification creation date
+        read: { type: Boolean, default: false }, // Mark notification as read/unread
       },
     ],
   },

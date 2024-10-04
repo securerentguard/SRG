@@ -1,33 +1,33 @@
 "use client";
 
 import { useState } from "react";
-// import './dashboard.css';
 import '../dashboard.css';
 import { Grid, List, ListItem, ListItemText, Box } from "@mui/material";
-import ManageProperties from "@/components/ManageProperties";
-import AllContracts from "@/components/AllContracts";
+import CurrentContracts from "@/components/CurrentContracts";
+import Invitations from "@/components/Invitations";
 
-// Placeholder Component for AllContracts
-// const AllContracts = () => <Box>All Contracts Component</Box>;
+// Placeholder Components for CurrentContracts and Invitations
+// const CurrentContracts = () => <Box>Current Contracts Component</Box>;
+// const Invitations = () => <Box>Invitations Component</Box>;
 
-export default function OwnerDashboard() {
-  const [selectedOption, setSelectedOption] = useState("allContracts");
+export default function TenantDashboard() {
+  const [selectedOption, setSelectedOption] = useState("currentContracts");
 
-  // List of options
+  // List of options for TenantDashboard
   const options = [
-    { id: "allContracts", label: "All Contracts" },
-    { id: "manageProperties", label: "Manage Properties" },
+    { id: "currentContracts", label: "Current Contracts" },
+    { id: "invitations", label: "Invitations" },
   ];
 
   // Function to render the content based on selected option
   const renderContent = () => {
     switch (selectedOption) {
-      case "allContracts":
-        return <AllContracts />;
-      case "manageProperties":
-        return <ManageProperties />; // Render ManageProperties when selected
+      case "currentContracts":
+        return <CurrentContracts />; // Render CurrentContracts when selected
+      case "invitations":
+        return <Invitations />; // Render Invitations when selected
       default:
-        return <AllContracts />;
+        return <CurrentContracts />;
     }
   };
 

@@ -1,4 +1,4 @@
-import '../dashboard.css';
+import '../../dashboard.css';
 import ContractForm from "@/components/contract/ContractForm";
 
 export default function CreateContract() {

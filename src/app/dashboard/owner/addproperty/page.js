@@ -1,4 +1,4 @@
-import '../dashboard.css';
+import '../../dashboard.css';
 import PropertyForm from "@/components/propertyForm/PropertyForm";
 
 export default function AddProperty() {

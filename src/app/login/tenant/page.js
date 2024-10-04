@@ -1,147 +1,179 @@
 "use client";
-
-import { useState } from "react";
-import "../login.css";
-import img from "../../../public/images/home.jpeg";
-import Image from "next/image";
+import { useState } from 'react';
+import '../login.css';
+import img from '../../../public/images/home.jpeg';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation'; // For routing
 
 export default function Tenantregister() {
-  const [fname, setFname] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [fname, setFname] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const router = useRouter(); // Hook for navigation
 
-  const handleSignup = async (e) => {
-    e.preventDefault(); // Prevent form reload
+  const handleLogin = async (e) => {
+    e.preventDefault(); // Prevent default form submission
 
     try {
-      const response = await fetch("/api/tenant/register", {
-        method: "POST",
+      const response = await fetch('/api/tenant/login', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          name: fname,
-          email: email,
-          password: password,
-        }),
+        body: JSON.stringify({ email, password }),
       });
 
-      const result = await response.json();
-
+      const data = await response.json();
       if (response.ok) {
-        alert(result.message); // Show success message in alert box
-        setFname("");
-        setEmail("");
-        setPassword("");
+        // Show success alert
+        alert('Login successful!');
+
+        // Store user info securely in localStorage or cookies
+        localStorage.setItem('tenant', JSON.stringify({ token: data.token }));
+
+        // Navigate to homepage after successful login
+        router.push('/');
       } else {
-        alert(result.message); // Show error message in alert box
+        // Show error in alert
+        alert(`Login error: ${data.message}`);
       }
     } catch (error) {
-      alert("An unexpected error occurred. Please try again.");
-      console.error(error);
+      console.error('Network error:', error);
+      alert('Network error, please try again.');
+    }
+  };
+
+  const handleSignup = async (e) => {
+    e.preventDefault(); // Prevent default form submission
+
+    try {
+      const response = await fetch('/api/tenant/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name: fname, email, password }),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        // Show success alert
+        alert('Signup successful!');
+
+        // Clear fields after pressing OK on alert
+        setFname('');
+        setEmail('');
+        setPassword('');
+      } else {
+        // Show error in alert
+        alert(`Signup error: ${data.message}`);
+      }
+    } catch (error) {
+      console.error('Network error:', error);
+      alert('Network error, please try again.');
     }
   };
 
   return (
     <>
-      <div className="panel1">
-        <div className="container">
-          <input type="checkbox" id="flip" />
-          <div className="cover">
-            <div className="front">
-              <Image src={img} alt="" />
+      <div className='panel1'>
+        <div className='container'>
+          <input type='checkbox' id='flip' />
+          <div className='cover'>
+            <div className='front'>
+              <Image src={img} alt='' />
             </div>
-            <div className="back">
-              <Image className="backImg" src={img} alt="" />
+            <div className='back'>
+              <Image className='backImg' src={img} alt='' />
             </div>
           </div>
-          <div className="forms">
-            <div className="form-content">
-              <div className="login-form">
-                <div className="title">Login as Tenant</div>
-                <form action="#">
-                  <div className="input-boxes">
-                    <div className="input-box">
-                      <i className="fas fa-envelope" />
+          <div className='forms'>
+            <div className='form-content'>
+              <div className='login-form'>
+                <div className='title'>Login as Tenant</div>
+                <form action='#'>
+                  <div className='input-boxes'>
+                    <div className='input-box'>
+                      <i className='fas fa-envelope' />
                       <input
-                        type="text"
-                        placeholder="Enter your email"
-                        required=""
+                        type='text'
+                        placeholder='Enter your email'
+                        required=''
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                       />
                     </div>
-                    <div className="input-box">
-                      <i className="fas fa-lock" />
+                    <div className='input-box'>
+                      <i className='fas fa-lock' />
                       <input
-                        type="password"
-                        placeholder="Enter your password"
-                        required=""
+                        type='password'
+                        placeholder='Enter your password'
+                        required=''
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                       />
                     </div>
-                    <div className="text">
-                      <a href="#">Forgot password?</a>
+                    <div className='text'>
+                      <a href='#'>Forgot password?</a>
                     </div>
-                    <div className="button input-box">
+                    <div className='button input-box'>
                       <input
-                        type="submit"
-                        defaultValue="Submit"
-                        onClick={(e) => handleLogin(e)}
+                        type='submit'
+                        value='Submit'
+                        onClick={handleLogin}
                       />
                     </div>
-                    <div className="text sign-up-text">
-                      Don't have an account?{" "}
-                      <label htmlFor="flip">Signup now</label>
+                    <div className='text sign-up-text'>
+                      Don't have an account?{' '}
+                      <label htmlFor='flip'>Signup now</label>
                     </div>
                   </div>
                 </form>
               </div>
-              <div className="signup-form">
-                <div className="title">Signup as Tenant</div>
-                <form action="#">
-                  <div className="input-boxes">
-                    <div className="input-box">
-                      <i className="fas fa-user" />
+              <div className='signup-form'>
+                <div className='title'>Signup as Tenant</div>
+                <form action='#'>
+                  <div className='input-boxes'>
+                    <div className='input-box'>
+                      <i className='fas fa-user' />
                       <input
-                        type="text"
-                        placeholder="Enter your name"
-                        required=""
+                        type='text'
+                        placeholder='Enter your name'
+                        required=''
                         value={fname}
                         onChange={(e) => setFname(e.target.value)}
                       />
                     </div>
-                    <div className="input-box">
-                      <i className="fas fa-envelope" />
+                    <div className='input-box'>
+                      <i className='fas fa-envelope' />
                       <input
-                        type="text"
-                        placeholder="Enter your email"
-                        required=""
+                        type='text'
+                        placeholder='Enter your email'
+                        required=''
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                       />
                     </div>
-                    <div className="input-box">
-                      <i className="fas fa-lock" />
+                    <div className='input-box'>
+                      <i className='fas fa-lock' />
                       <input
-                        type="password"
-                        placeholder="Enter your password"
-                        required=""
+                        type='password'
+                        placeholder='Enter your password'
+                        required=''
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                       />
                     </div>
-                    <div className="button input-box">
+                    <div className='button input-box'>
                       <input
-                        type="submit"
-                        defaultValue="Submit"
+                        type='submit'
+                        value='Submit'
                         onClick={handleSignup}
                       />
                     </div>
-                    <div className="text sign-up-text">
-                      Already have an account?{" "}
-                      <label htmlFor="flip">Login now</label>
+                    <div className='text sign-up-text'>
+                      Already have an account?{' '}
+                      <label htmlFor='flip'>Login now</label>
                     </div>
                   </div>
                 </form>
