@@ -23,7 +23,7 @@ export default function TenantDashboard() {
         return <CurrentContracts />; // Render CurrentContracts when selected
       case "invitations":
         return <Invitations />; // Render Invitations when selected
-      case "manageProperties":
+      case "Transactions":
         return <Transactions />;
       default:
         return <CurrentContracts />;
